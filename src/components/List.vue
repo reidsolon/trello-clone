@@ -133,6 +133,12 @@ div.card {
     white-space: normal;
 }
 
+div.card-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 70vh;
+}
+
 div.card-header {
     border-bottom: unset;
     background-color: unset;

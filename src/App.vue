@@ -68,8 +68,6 @@ export default defineComponent({
           title: title
         })
 
-        console.log(Lists.value)
-
         isAdding.value = false
 
       }
