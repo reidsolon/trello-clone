@@ -61,7 +61,7 @@ export default defineComponent({
 div.list-details {
     box-shadow: inset 0 0 0 2px #0079bf;
     overflow: hidden;
-    padding: 6px 8px 2px;
+    padding: 2px 2px 2px;
     position: relative;
     z-index: 10;
     background-color: #fff;
@@ -71,7 +71,6 @@ div.list-details {
     display: block;
     margin-bottom: 8px;
     max-width: 300px;
-    min-height: 20px;
     position: relative;
     text-decoration: none;
     z-index: 0;

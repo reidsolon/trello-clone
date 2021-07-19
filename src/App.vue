@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BuyMeCoffee></BuyMeCoffee>
     <div class="p-1 text-center" id="navbar">
       <img src="https://a.trellocdn.com/prgb/dist/images/header-logo-spirit.d947df93bc055849898e.gif" alt="" class="">
     </div>
@@ -11,6 +12,8 @@
               v-for="(item, index) in Lists"
               :key="index"
               :info="item"
+              :index="index"
+              @save_new_title="saveNewTitle"
             ></List>
             <AddListButton
               v-if="!isAdding"
@@ -33,6 +36,8 @@
 
 import { defineComponent, ref } from '@vue/composition-api'
 
+const BuyMeCoffee = () => import("./components/BuyMeCoffe.vue")
+
 const List = () => import('./components/List.vue')
 
 const Navbar = () => import('./components/Navbar.vue')
@@ -47,7 +52,8 @@ export default defineComponent({
       List,
       Navbar,
       AddListButton,
-      CreateList
+      CreateList,
+      BuyMeCoffee
     },
 
     setup() {
@@ -79,9 +85,18 @@ export default defineComponent({
         isAdding.value = false
 
       }
+
+      function saveNewTitle({index, title}) {
+
+        try {
+          Lists.value[index].title = title
+        } catch ( e ) {
+          console.log(e)
+        }
+      }
       
       return {
-        adding, closing, isAdding, save, Lists
+        adding, closing, isAdding, save, Lists, saveNewTitle
       }
       
     },
