@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card p-2 mx-1">
+        <div class="card p-2 mx-1" id="cardModalToggle">
             <div class="card-header row">
                 <div class="col my-auto" v-if="info">
                     <transition name="fade">
@@ -32,10 +32,16 @@
             </div>
 
             <div class="card-body p-0 mt-2">
-                <template v-for="(item, index) in Tasks">
-                    <div :key="index" class="list-details">
-                        {{ item.name }}
-                    </div>
+                <template v-for="(item, idx) in info.cards.value">
+                    <ListCard :key="idx" :info="item" :index="idx" :listIndex="index">
+                    </ListCard>
+                    <CardItemModal
+                        :key="idx+'_modal'"
+                        :info="item"
+                        :index="idx"
+                        :list="info"
+                        :listIndex="index"
+                    ></CardItemModal>
                 </template>
                 <EmptyCard v-if="isAdding"
                     @close="isAdding=false"
@@ -59,6 +65,10 @@ import { defineComponent, onMounted, ref } from '@vue/composition-api'
 
 const EmptyCard = () => import('./EmptyCard.vue')
 
+const ListCard = () => import('./ListCard.vue')
+
+const CardItemModal = () => import('./CarditemModal.vue')
+
 export default defineComponent({
 
     props: {
@@ -69,10 +79,12 @@ export default defineComponent({
     components: {
         IosMoreIcon,
         IosAddIcon,
-        EmptyCard
+        CardItemModal,
+        EmptyCard,
+        ListCard
     },
 
-    setup({info, index}) {
+    setup({info, index}, {root}) {
 
         const newTitle = ref('')
 
@@ -83,9 +95,14 @@ export default defineComponent({
         const editTitle = ref(false)
 
         function saveCard(title) {
-            Tasks.value.push({
-                name: title,
+
+            root.$store.dispatch('addCard', {
+                item: {
+                    title: title,
+                },
+                index: index
             })
+
             isAdding.value = false
         }
 

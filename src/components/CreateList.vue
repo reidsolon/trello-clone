@@ -16,7 +16,7 @@
 <script>
 
 import IosCloseIcon from 'vue-ionicons/dist/ios-close.vue'
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, onMounted, ref } from '@vue/composition-api'
 
 export default defineComponent({
 
@@ -46,6 +46,10 @@ export default defineComponent({
 
             title.value = ''
         }
+
+        onMounted(() => {
+            // console.log(root.$store)
+        })
 
         return {
             title, save, close

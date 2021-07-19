@@ -9,7 +9,7 @@
         <div class="col-12">
           <div class="p-1 d-inline-flex" style="overflow: auto;">
             <List
-              v-for="(item, index) in Lists"
+              v-for="(item, index) in this.$store.state.Lists.value"
               :key="index"
               :info="item"
               :index="index"
@@ -56,7 +56,7 @@ export default defineComponent({
       BuyMeCoffee
     },
 
-    setup() {
+    setup(props, {root}) {
 
       const isAdding = ref(false)
 
@@ -64,8 +64,10 @@ export default defineComponent({
 
       function save(title) {
 
-        Lists.value.push({
-          title: title
+        root.$store.dispatch('addList', {
+          item: {
+            title: title,
+          }
         })
 
         isAdding.value = false
@@ -85,9 +87,11 @@ export default defineComponent({
       }
 
       function saveNewTitle({index, title}) {
-
         try {
-          Lists.value[index].title = title
+          root.$store.dispatch('updateListTitle', {
+            index: index,
+            title: title,
+          })
         } catch ( e ) {
           console.log(e)
         }

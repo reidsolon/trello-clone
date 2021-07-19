@@ -1,22 +1,26 @@
 import Vue from 'vue'
 import App from './App.vue'
-import 'bootstrap'
+import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap'
-import '@popperjs/core'
+import 'jquery/src/jquery.js'
+import 'popper.js/dist/popper.min.js';
+import 'bootstrap/dist/js/bootstrap.min.js'
 import './assets/app.css'
+import Vuex from 'vuex'
+import VueCompositionAPI from '@vue/composition-api'
+import {store} from './store/store'
 
 global.jQuery = require('jquery');
 var $ = global.jQuery;
 window.$ = $;
-window.Popper = require('@popperjs/core')
-
-import VueCompositionAPI from '@vue/composition-api'
 
 Vue.use(VueCompositionAPI)
+Vue.use(Vuex)
+Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
+  store: store,
 }).$mount('#app')
