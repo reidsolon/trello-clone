@@ -1,5 +1,5 @@
 <template>
-    <div v-if="info" class="list-details" :id="`${listIndex}_cardModalToggle${index}`">
+    <div v-if="info" class="list-details" :id="`${listIndex}_cardModalToggle${index}`" draggable="true">
         {{ info.title }}
 
         <template v-if="info.description">

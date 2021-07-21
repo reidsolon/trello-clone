@@ -29,7 +29,12 @@
                                 </a>
 
                                 <div class="editable" v-else>
-                                    <textarea class="real-text-area" id="description_textarea" placeholder="Add more detailed description..." v-model="description"></textarea>
+                                    <textarea 
+                                        @keypress.enter.exact.prevent="saveDescription()"
+                                        class="real-text-area" 
+                                        id="description_textarea" 
+                                        placeholder="Add more detailed description..." 
+                                        v-model="description"></textarea>
                                     
                                     <div class="actions my-2">
                                         <button class="btn btn-primary save-btn" @click.prevent="saveDescription()">
