@@ -74,7 +74,28 @@ export const store = new Vuex.Store({
             }
         },  
 
+        ARCHIVE_LIST (state, value) {
+            if(typeof value != 'object') {
+                return
+            }
+
+            try {
+                state.Lists.value.splice(value.index, 1)
+            } catch ( e ) {
+                console.log(e)
+            }
+        },
+
+        ARCHIVE_CARD (state, value) {
+            try {
+                state.Lists.value[value.listIndex]?.cards.value.splice(value.cardIndex, 1)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
         ADD_CARD (state, value) {
+
             if(typeof value != 'object') {
                 return
             }
@@ -85,11 +106,28 @@ export const store = new Vuex.Store({
 
             try {
 
-                state.Lists.value[value.index].cards.value.push(value.item)
+                if(value.isPrepend) {
+                    state.Lists.value[value.index].cards.value.unshift(value.item)
+                } else {
+                    state.Lists.value[value.index].cards.value.push(value.item)
+                }
+
 
             } catch (e) {
                 console.log(e)
             }
+        },
+
+        SAVE_CARD_DESCRIPTION(state, value) {
+
+            try {
+
+                state.Lists.value[value.listIndex].cards.value[value.cardIndex].description = value.description
+
+            } catch( e ) {
+                console.log(e)
+            }
+            
         }
 
     },
@@ -114,6 +152,10 @@ export const store = new Vuex.Store({
 
         archiveList({commit}, value) {
             commit('ARCHIVE_LIST', value)
+        },
+
+        saveCardDescription({commit}, value) {
+            commit('SAVE_CARD_DESCRIPTION', value)
         }
 
     }

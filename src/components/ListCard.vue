@@ -1,15 +1,24 @@
 <template>
     <div v-if="info" class="list-details" :id="`${listIndex}_cardModalToggle${index}`">
         {{ info.title }}
+
+        <template v-if="info.description">
+            <IosListIcon></IosListIcon>
+        </template>
     </div>
 </template>
 <script>
 
 import { defineComponent, onMounted } from '@vue/composition-api'
+import IosListIcon from 'vue-ionicons/dist/ios-list.vue'
 
 const $ = require('jquery')
 
 export default defineComponent({
+
+    components: {
+        IosListIcon
+    },
 
     props: {
         info: Object,

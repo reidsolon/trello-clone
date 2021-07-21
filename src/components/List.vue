@@ -21,17 +21,31 @@
                         </template>
                     </transition>
                 </div>
-                <div class="col dropright" style="text-align: right;" >
-                    <div class="d-inline px-2 more dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true">
+                <div class="col" style="text-align: right;" @click.prevent="openDropdown()">
+                    <div class="d-inline px-2 more dropdown-toggle dropdown-toggle-split" :id="`${index}-list-dropdown`">
                         <IosMoreIcon></IosMoreIcon>
                     </div>
-                    <div class="dropdown-menu">
-                        <!-- Dropdown menu links -->
+                    <div class="dropdown-menu show" v-if="isDropdown">
+                        <div class="text-center">
+                            <small>List Actions</small>
+                        </div>
+                        <div class="dropdown-divider px-1"></div>
+                        <div class="text-left">
+                            <a class="dropdown-item" @click="addCardAbove()" href="javascript:void(0)">Add card...</a>
+                            <div class="dropdown-divider px-1"></div>
+                            <a class="dropdown-item" @click="archiveList()" href="javascript:void(0)">Archive this list</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="card-body p-0 mt-2">
+                <EmptyCard
+                    :prepend="true"
+                    v-if="isAddingAbove && !isAdding"
+                    @close="isAdding=false;isAddingAbove=false"
+                    @save-prepend="saveCardPrepend"
+                ></EmptyCard>
                 <template v-for="(item, idx) in info.cards.value">
                     <ListCard :key="idx" :info="item" :index="idx" :listIndex="index">
                     </ListCard>
@@ -41,15 +55,17 @@
                         :index="idx"
                         :list="info"
                         :listIndex="index"
+                        @archive="archiveCard(idx, index)"
+                        @saveDescription="saveDescription"
                     ></CardItemModal>
                 </template>
-                <EmptyCard v-if="isAdding"
-                    @close="isAdding=false"
+                <EmptyCard v-if="isAdding && !isAddingAbove"
+                    @close="isAdding=false;isAddingAbove=false"
                     @save="saveCard"
                 ></EmptyCard>
             </div>
 
-            <div class="card-footer p-0 py-1" v-if="!isAdding" @click.prevent="addCard">
+            <div class="card-footer p-0 py-1" v-if="!isAdding && !isAddingAbove" @click.prevent="addCard">
                 <div class="inline-block">
                     <IosAddIcon></IosAddIcon> Add a card
                 </div>
@@ -88,7 +104,11 @@ export default defineComponent({
 
         const newTitle = ref('')
 
+        const isAddingAbove = ref(false)
+
         const isAdding = ref(false)
+
+        const isDropdown = ref(false)
 
         const Tasks = ref([])
 
@@ -99,15 +119,34 @@ export default defineComponent({
             root.$store.dispatch('addCard', {
                 item: {
                     title: title,
+                    description: ''
                 },
                 index: index
             })
 
             isAdding.value = false
+            isAddingAbove.value = false
+        }
+
+        function saveCardPrepend(title) {
+            root.$store.dispatch('addCard', {
+                item: {
+                    title: title,
+                    description: ''
+                },
+                index: index,
+                isPrepend: true,
+            })
         }
 
         function addCard() {
+            isAddingAbove.value = false
             isAdding.value = true
+        }
+
+        function addCardAbove() {
+            isAdding.value = false
+            isAddingAbove.value = true
         }
 
         function saveEditTitle() {
@@ -117,6 +156,31 @@ export default defineComponent({
             })
 
             editTitle.value = false
+        }
+
+        function openDropdown() {
+            isDropdown.value = !isDropdown.value
+        }
+
+        function archiveList() {
+            root.$store.dispatch('archiveList', {
+                index: index,
+            })
+        }
+
+        function archiveCard(cardIndex, listIndex) {
+            root.$store.dispatch('archiveCard', {
+                cardIndex: cardIndex,
+                listIndex: listIndex,
+            })
+        }
+
+        function saveDescription(description) {
+            root.$store.dispatch('saveCardDescription', {
+                listIndex: index,
+                cardIndex: description.cardIndex,
+                description: description.description
+            })
         }
 
         onMounted(() => {
@@ -130,7 +194,15 @@ export default defineComponent({
             saveCard,
             editTitle,
             newTitle,
-            saveEditTitle
+            saveEditTitle,
+            openDropdown,
+            isDropdown,
+            addCardAbove,
+            isAddingAbove,
+            saveCardPrepend,
+            archiveList,
+            archiveCard,
+            saveDescription
         }
         
     },
@@ -244,10 +316,23 @@ input.edit-title {
     z-index: 0;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .2s;
+div.dropdown-menu.show {
+    background: #fff;
+    border-radius: 3px;
+    right: -270px;
+    box-shadow: 0 8px 16px -4px rgb(9 30 66 / 25%), 0 0 0 1px rgb(9 30 66 / 8%);
+    overflow: hidden;
+    position: absolute;
+    width: 304px;
+    z-index: 70;
+    transform: translateZ(0);
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+
+div.dropdown-menu.show .dropdown-item {
+    cursor: pointer;
+    display: block;
+    font-weight: 400;
+    position: relative;
+    text-decoration: none;
 }
 </style>

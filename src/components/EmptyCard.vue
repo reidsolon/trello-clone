@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mb-2">
         <div class="list-details">
             <textarea v-model="title" placeholder="Enter a title for this card." @keypress.enter.exact.prevent="save()" autofocus></textarea>
         </div>
@@ -18,11 +18,19 @@ import { defineComponent, ref } from '@vue/composition-api'
 
 export default defineComponent({
 
+    props: {
+        prepend: {
+            required: false,
+            default: false,
+            type: Boolean,
+        }
+    },
+
     components: {
         IosCloseIcon
     },
 
-    setup() {
+    setup( {prepend} ) {
 
         const title = ref('')
 
@@ -40,7 +48,12 @@ export default defineComponent({
                 return
             }
 
-            this.$emit('save', title.value)
+            if(prepend) {
+                this.$emit('save-prepend', title.value)
+            } else {
+                this.$emit('save', title.value)
+            }
+
 
             title.value = ''
         }

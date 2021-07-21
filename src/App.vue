@@ -7,7 +7,7 @@
     <div class="container-fluid" id="main">
       <div class="row">
         <div class="col-12">
-          <div class="p-1 d-inline-flex" style="overflow: auto;">
+          <div class="p-1 d-inline-flex" style="height: 100vh;">
             <List
               v-for="(item, index) in this.$store.state.Lists.value"
               :key="index"
@@ -121,4 +121,5 @@ body {
   height: 100vh;
   background-repeat: no-repeat;
 }
+
 </style>
